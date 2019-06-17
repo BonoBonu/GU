@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class Scheduler extends JFrame implements ActionListener {
@@ -20,11 +21,14 @@ public class Scheduler extends JFrame implements ActionListener {
 	public int today=1;
 	String[] Day = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
 	
+	public static final int WIDTH =1400;
+    public static final int HEIGHT =1500;
+    
 	public Scheduler(String g,String name,int w) {
 		Week set=new Week();
 		 setTitle(g);
 		 System.out.println(g);
-         setSize(1400, 1500);	
+         setSize(WIDTH, HEIGHT);	
          setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
          //setLayout(CardLayout());
          
@@ -61,10 +65,10 @@ public class Scheduler extends JFrame implements ActionListener {
          for(int i=0;i<w;i++) {
         	 b_1[i]=new JButton((i+1)+" WEEK");
         	 b_1[i].setFont(new Font("굴림체", Font.BOLD, 30));
-        	 b_1[i].setPreferredSize(new Dimension(150,100));
+        	 b_1[i].setPreferredSize(new Dimension(180,100));
         	 west.add(b_1[i]);
          }
-        panel_3.add(west);
+         panel_3.add(west);
          
          JPanel center=new JPanel();
          center.setLayout(new GridLayout(w,7));
@@ -81,13 +85,19 @@ public class Scheduler extends JFrame implements ActionListener {
          east.setLayout(new GridLayout(w,7));
          JButton[] b_3=new JButton[w];
          for(int i=0;i<w;i++) {
-        	 b_3[i]=new JButton(10+"% 완료");
+        	 b_3[i]=new JButton(0+"% 완료");
         	 b_3[i].setFont(new Font("굴림체", Font.BOLD, 20));
         	 b_3[i].setPreferredSize(new Dimension(150,100));
         	 east.add(b_3[i]);
          }
          panel_3.add(east);
-         panel.add(panel_3);
+         
+         JScrollPane js = new JScrollPane(panel_3,
+                                         JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+         js.setPreferredSize(new Dimension(1400,700));
+       
+         panel.add(js);
          
          JPanel panel_4=new JPanel();
          panel_4.setLayout(new GridLayout(2,1));
@@ -128,7 +138,6 @@ public class Scheduler extends JFrame implements ActionListener {
          add(panel);
 	}
 	
-
 	 public void actionPerformed(ActionEvent e){
 		 String what=e.getActionCommand();
 		 if(what.matches(".*계획표.*")) {
