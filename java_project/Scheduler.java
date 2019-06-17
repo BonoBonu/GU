@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -22,8 +23,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class Scheduler extends JFrame implements ActionListener {
-	
-	public int today=1;
+	public int now_Week=1;
+	public int Today=1;
 	String[] Day = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday","every week"};
 	
 	public static final int WIDTH =1400;
@@ -111,8 +112,9 @@ public class Scheduler extends JFrame implements ActionListener {
          comment.setFont(new Font("굴림체", Font.BOLD, 30));
          panel_4.add(comment);
          
+         Date today = new Date();
          
-         JLabel date=new JLabel("TODAY "+today+" WEEK "+Day[2]+" 00:00");
+         JLabel date=new JLabel("TODAY "+now_Week+" WEEK "+Day[Today]+" "+today.getHours()+":"+today.getMinutes());
          date.setFont(new Font("굴림체", Font.BOLD, 40));
          panel_4.add(date);
          panel.add(panel_4);
