@@ -19,6 +19,7 @@ public class Scheduler extends JFrame implements ActionListener {
 	
 	public int today=1;
 	String[] Day = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
+	
 	public Scheduler(String g,String name,int w) {
 		Week set=new Week();
 		 setTitle(g);
@@ -36,6 +37,7 @@ public class Scheduler extends JFrame implements ActionListener {
          nickname.setFont(new Font("굴림체", Font.BOLD, 50));
          panel_1.add(nickname);
          JButton button=new JButton(+w+" 주 계획표");
+         button.addActionListener(this);
          button.setFont(new Font("굴림체", Font.BOLD, 50));
          panel_1.add(button);
          panel.add(panel_1);
@@ -91,6 +93,7 @@ public class Scheduler extends JFrame implements ActionListener {
          panel_4.setLayout(new GridLayout(2,1));
          JTextArea comment=new JTextArea(1,15);
          comment.setText("공부 좀 더 파이팅!! ");
+         comment.setEditable(false);
          comment.setFont(new Font("굴림체", Font.BOLD, 30));
          panel_4.add(comment);
          
@@ -111,6 +114,7 @@ public class Scheduler extends JFrame implements ActionListener {
          
          JTextArea plan=new JTextArea(3,80);
          plan.setText("계획들");
+         plan.setEditable(false);
          plan.setFont(new Font("굴림체", Font.BOLD, 30));
          today_plan.add(plan);
          
@@ -126,6 +130,9 @@ public class Scheduler extends JFrame implements ActionListener {
 	
 
 	 public void actionPerformed(ActionEvent e){
-		 
+		 String what=e.getActionCommand();
+		 if(what.matches(".*계획표.*")) {
+			 make_schedule make=new make_schedule(what.charAt(0)-'0') ;
+		 }
 	 }
 }
