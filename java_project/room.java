@@ -37,8 +37,8 @@ implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		String cho=e.getActionCommand( );
 		if(cho=="GAME") {
-			game_q gui = new game_q( );
-	        gui.setVisible(true);
+			/*game_q gui = new game_q( );
+	        gui.setVisible(true);*/
 		}
 		else {
 			 Week gui = new Week( );
