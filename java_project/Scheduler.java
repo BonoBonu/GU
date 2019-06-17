@@ -24,7 +24,7 @@ import javax.swing.JTextField;
 public class Scheduler extends JFrame implements ActionListener {
 	
 	public int today=1;
-	String[] Day = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
+	String[] Day = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday","every week"};
 	
 	public static final int WIDTH =1400;
     public static final int HEIGHT =1500;
@@ -44,12 +44,10 @@ public class Scheduler extends JFrame implements ActionListener {
          
          JPanel panel_1=new JPanel();
          panel_1.setLayout(new FlowLayout());
-         JLabel nickname=new JLabel(name+"의 ");
+         JLabel nickname=new JLabel(name+"의 "+w+" 주 계획표");
          nickname.setFont(new Font("굴림체", Font.BOLD, 50));
          panel_1.add(nickname);
-         JButton button=new JButton(+w+" 주 계획표");
-         button.setFont(new Font("굴림체", Font.BOLD, 50));
-         panel_1.add(button);
+         
          panel.add(panel_1);
          
          JPanel panel_2=new JPanel();
@@ -101,7 +99,7 @@ public class Scheduler extends JFrame implements ActionListener {
          JScrollPane js = new JScrollPane(panel_3,
                                          JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                                          JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-         js.setPreferredSize(new Dimension(1400,700));
+         js.setPreferredSize(new Dimension(1400,550));
        
          panel.add(js);
          
@@ -114,7 +112,7 @@ public class Scheduler extends JFrame implements ActionListener {
          panel_4.add(comment);
          
          
-         JLabel date=new JLabel("TODAY "+today+"WEEK"+Day[2]+"DAY 00:00");
+         JLabel date=new JLabel("TODAY "+today+" WEEK "+Day[2]+" 00:00");
          date.setFont(new Font("굴림체", Font.BOLD, 40));
          panel_4.add(date);
          panel.add(panel_4);
@@ -124,18 +122,23 @@ public class Scheduler extends JFrame implements ActionListener {
          now.setFont(new Font("굴림체", Font.BOLD, 30));
          today_plan.add(now);
          
+         JTextArea plan=new JTextArea(3,80);
+         plan.setText("오늘 계획들");
+         plan.setEditable(false);
+         plan.setFont(new Font("굴림체", Font.BOLD, 30));
+         
+         JScrollPane j = new JScrollPane(plan,
+                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+         today_plan.add(j);     
+         
          JButton complete=new JButton("완료");
          complete.addActionListener(this);
          complete.setFont(new Font("굴림체", Font.BOLD, 30));
          today_plan.add(complete);
-         
-         JTextArea plan=new JTextArea(3,80);
-         plan.setText("계획들");
-         plan.setEditable(false);
-         plan.setFont(new Font("굴림체", Font.BOLD, 30));
-         today_plan.add(plan);
-              
          panel.add(today_plan);
+         
          tp.add("main",panel);
          tp.setFont(new Font("굴림체", Font.BOLD, 20));
          
@@ -160,12 +163,22 @@ public class Scheduler extends JFrame implements ActionListener {
          comboBox.setBackground(Color.WHITE);
          set_panel1.add(comboBox);
          
+         
+         JComboBox comboBox2=new JComboBox();
+         comboBox2.setModel(new DefaultComboBoxModel(Day));
+         comboBox2.setPreferredSize(new Dimension(200,50));
+         comboBox2.setFont(new Font("굴림체", Font.BOLD, 30));
+         comboBox2.setBackground(Color.WHITE);
+         set_panel1.add(comboBox2);
+         
+         
          set_panel1.setBounds(200, 50,1000, 60);
          set_panel.add(set_panel1);
          
          JPanel set_panel2=new JPanel();
          set_panel2.setLayout(new FlowLayout());
          JComboBox everyday_set=new JComboBox();
+         
          String[] t=new String[25];
          for(int i=0;i<25;i++)
         	 t[i]=i+" 시";
@@ -214,8 +227,14 @@ public class Scheduler extends JFrame implements ActionListener {
          JTextArea set_plan=new JTextArea(3,60);
          set_plan.setFont(new Font("굴림체", Font.BOLD, 30));
          set_panel3.add(set_plan);
-         set_panel3.setBounds(100, 170,1200, 200);
+         set_panel3.setBounds(100, 170,1200, 170);
          set_panel.add(set_panel3);
+         
+         JButton store=new JButton("저장");
+         store.setBounds(1100, 340,100, 50);
+         store.addActionListener(this);
+         store.setFont(new Font("굴림체", Font.BOLD, 30));
+         set_panel.add(store);
          
          drawJPanel set_panel4=new drawJPanel();
          set_panel4.setBounds(200, 370,1000, 1000);
@@ -234,6 +253,9 @@ public class Scheduler extends JFrame implements ActionListener {
 	 public void actionPerformed(ActionEvent e){
 		 String what=e.getActionCommand();
 		 if(what.matches(".*완료.*")) {
+			 
+		 }
+		 else if(what.matches(".*저장.*")) {
 			 
 		 }
 	 }
