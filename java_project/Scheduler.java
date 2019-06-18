@@ -1,3 +1,5 @@
+package scheduler;
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -30,6 +32,7 @@ public class Scheduler extends JFrame implements ActionListener {
 	public static final int WIDTH =1400;
     public static final int HEIGHT =1500;
     
+    public static int progress_percent = 50; //목표진행률 
     JTabbedPane tp=new JTabbedPane(); 
     
 	public Scheduler(String g,String name,int w) {
@@ -107,7 +110,16 @@ public class Scheduler extends JFrame implements ActionListener {
          JPanel panel_4=new JPanel();
          panel_4.setLayout(new GridLayout(2,1));
          JTextArea comment=new JTextArea(1,15);
-         comment.setText("공부 좀 더 파이팅!! ");
+         if(progress_percent>0 && progress_percent<20)
+        	 comment.setText("공부를 거의 안했어!!");
+         else if(progress_percent>=20 && progress_percent<40)
+        	 comment.setText("아직 좀 부족해!!");
+         else if(progress_percent>=40 && progress_percent<60)
+        	 comment.setText("더 잘할 수 있어!!");
+         else if(progress_percent>=60 && progress_percent<80)
+        	 comment.setText("충분히 잘하고있어!!");
+         else if(progress_percent>=80 && progress_percent<100)
+        	 comment.setText("완벽하게 해내고 있어!!");
          comment.setEditable(false);
          comment.setFont(new Font("굴림체", Font.BOLD, 30));
          panel_4.add(comment);
