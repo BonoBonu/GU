@@ -1,4 +1,3 @@
-package scheduler;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -29,6 +28,8 @@ public class Scheduler extends JFrame implements ActionListener {
 	public int Today=1;
 	String[] Day = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday","every week"};
 	
+
+    
 	public static final int WIDTH =1400;
     public static final int HEIGHT =1500;
     
@@ -42,6 +43,15 @@ public class Scheduler extends JFrame implements ActionListener {
          setSize(WIDTH, HEIGHT);	
          setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
          //setLayout(CardLayout());
+         
+         
+         double[] percent = new double[w];
+         
+         for(int i = 0 ; i <w; i++)
+         {
+        	 percent[i] = 0.0;
+         }
+         
          
          JPanel panel=new JPanel();
          panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
@@ -151,6 +161,22 @@ public class Scheduler extends JFrame implements ActionListener {
          complete.addActionListener(this);
          complete.setFont(new Font("굴림체", Font.BOLD, 30));
          today_plan.add(complete);
+         
+         int day = 7*now_Week+Today-7;
+         
+    	 complete.addActionListener(new ActionListener(){
+    		 	public void actionPerformed(ActionEvent arg0){
+    		 		if(b_2[day].getText() == "O")
+    		 		{}
+    		 		else {
+    		 		b_2[day].setText("O");
+    		 		b_2[day].setBackground(Color.GREEN);
+    		 		percent[day/7] += 100/7.0;
+    		 		b_3[day/7].setText(Integer.toString((int)percent[day/7])+"% 완료");
+    		 		}
+    		 	}
+    	 });
+    	 
          panel.add(today_plan);
          
          tp.add("main",panel);
