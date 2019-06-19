@@ -1,6 +1,4 @@
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -9,11 +7,22 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.StringTokenizer;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,60 +32,77 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class Scheduler extends JFrame implements ActionListener {
-	public int now_Week=1;
-	public int Today=1;
-	String[] Day = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday","every week"};
-	
 
-    
+public class Scheduler extends JFrame implements ActionListener {
+	public static int now_Week=1;
+	public static int Today=0;
+	public static int add=0;
+	public static int W=0;
+	String[] Day = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday","every week"};
+
 	public static final int WIDTH =1400;
     public static final int HEIGHT =1500;
-    
-    public static int progress_percent = 50; //목표진행률 
+    String[][] str_set;
+    int[][] chk_cnt;
+    StringTokenizer st;
     JTabbedPane tp=new JTabbedPane(); 
+    JTabbedPane ts=new JTabbedPane(); 
+    JTextField set_plan=new JTextField(60);
+    JTextArea set_p=new JTextArea(60,60);
+    Date today = new Date();
+    JLabel date=new JLabel();
+    JLabel progress=new JLabel();
+    JButton complete;
+    JCheckBox[] chk;
+    JButton[] s_2;
+    JPanel plan;
     
 	public Scheduler(String g,String name,int w) {
-		 Week set=new Week();
-		 setTitle(g);
-		 System.out.println(g);
-         setSize(WIDTH, HEIGHT);	
-         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-         //setLayout(CardLayout());
-         
-         
-         double[] percent = new double[w];
+		W=w;
+		chk_cnt=new int[w][7];
+		str_set=new String[w][7];
+		for(int i=0;i<w;i++)
+			for(int j=0;j<7;j++)
+				str_set[i][j]="오늘 할일\n";
+		double[] percent = new double[w];
          
          for(int i = 0 ; i <w; i++)
          {
         	 percent[i] = 0.0;
          }
          
+		 int[][] day_arr=new int[w][7];
+		 
+		 Week set=new Week();
+		 setTitle(g);
+         setSize(WIDTH, HEIGHT);	
+         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
          
          JPanel panel=new JPanel();
          panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
          
          JPanel panel_1=new JPanel();
+         panel_1.setBackground(Color.WHITE);
          panel_1.setLayout(new FlowLayout());
          JLabel nickname=new JLabel(name+"의 "+w+" 주 계획표");
-         nickname.setFont(new Font("굴림체", Font.BOLD, 50));
+         nickname.setFont(new Font("굴림체", Font.BOLD, 70));        
          panel_1.add(nickname);
-         
          panel.add(panel_1);
          
          JPanel panel_2=new JPanel();
          panel_2.setBackground(Color.WHITE);
          panel_2.setLayout(new GridLayout(2,1));
-         JLabel Progress=new JLabel("목표진행률");
-         Progress.setFont(new Font("굴림체", Font.BOLD, 30));
+         JLabel Progress=new JLabel("목표: "+g+"!!");
+         Progress.setFont(new Font("굴림체", Font.BOLD, 50));
          panel_2.add(Progress);
-         JLabel progress=new JLabel("2주차 월요일입니다. 현재까지 50% 진행했습니다");
+         progress.setText(now_Week+"주차 "+Day[Today]+" 입니다. 현재까지 0% 완료했습니다");
          progress.setFont(new Font("굴림체", Font.BOLD, 40));
          panel_2.add(progress);
          panel.add(panel_2);
          
          JPanel panel_3=new JPanel();
          panel_3.setLayout(new FlowLayout());
+         panel_3.setBackground(Color.WHITE);
          JPanel west=new JPanel();
          west.setLayout(new GridLayout(w,1));
          JButton[] b_1=new JButton[w];
@@ -84,6 +110,7 @@ public class Scheduler extends JFrame implements ActionListener {
         	 b_1[i]=new JButton((i+1)+" WEEK");
         	 b_1[i].setFont(new Font("굴림체", Font.BOLD, 30));
         	 b_1[i].setPreferredSize(new Dimension(180,100));
+        	 b_1[i].setForeground(Color.BLACK);
         	 west.add(b_1[i]);
          }
          panel_3.add(west);
@@ -95,6 +122,7 @@ public class Scheduler extends JFrame implements ActionListener {
         	 b_2[i]=new JButton("X");
         	 b_2[i].setFont(new Font("굴림체", Font.BOLD, 50));
         	 b_2[i].setPreferredSize(new Dimension(100,100));
+        	 b_2[i].setForeground(Color.BLACK);
         	 center.add(b_2[i]);
          }
          panel_3.add(center);
@@ -106,6 +134,7 @@ public class Scheduler extends JFrame implements ActionListener {
         	 b_3[i]=new JButton(0+"% 완료");
         	 b_3[i].setFont(new Font("굴림체", Font.BOLD, 20));
         	 b_3[i].setPreferredSize(new Dimension(150,100));
+        	 b_3[i].setForeground(Color.BLACK);
         	 east.add(b_3[i]);
          }
          panel_3.add(east);
@@ -118,62 +147,88 @@ public class Scheduler extends JFrame implements ActionListener {
          panel.add(js);
          
          JPanel panel_4=new JPanel();
+         panel_4.setBackground(Color.WHITE);
          panel_4.setLayout(new GridLayout(2,1));
          JTextArea comment=new JTextArea(1,15);
-         if(progress_percent>0 && progress_percent<20)
-        	 comment.setText("공부를 거의 안했어!!");
-         else if(progress_percent>=20 && progress_percent<40)
-        	 comment.setText("아직 좀 부족해!!");
-         else if(progress_percent>=40 && progress_percent<60)
-        	 comment.setText("더 잘할 수 있어!!");
-         else if(progress_percent>=60 && progress_percent<80)
-        	 comment.setText("충분히 잘하고있어!!");
-         else if(progress_percent>=80 && progress_percent<100)
-        	 comment.setText("완벽하게 해내고 있어!!");
+         comment.setText("시작이 반 이래~ 파이팅!! ");
          comment.setEditable(false);
-         comment.setFont(new Font("굴림체", Font.BOLD, 30));
+         comment.setFont(new Font("굴림체", Font.BOLD, 40));
          panel_4.add(comment);
          
-         Date today = new Date();
-         
-         JLabel date=new JLabel("TODAY "+now_Week+" WEEK "+Day[Today]+" "+today.getHours()+":"+today.getMinutes());
-         date.setFont(new Font("굴림체", Font.BOLD, 40));
+         date.setText("TODAY "+now_Week+" WEEK "+Day[Today]);
+         date.setFont(new Font("굴림체", Font.BOLD, 20));
          panel_4.add(date);
          panel.add(panel_4);
          
          JPanel today_plan=new JPanel();
-         JLabel now =new JLabel("지금 할 일");
+         JLabel now =new JLabel("오늘 할 일");
          now.setFont(new Font("굴림체", Font.BOLD, 30));
          today_plan.add(now);
          
-         JTextArea plan=new JTextArea(3,80);
-         plan.setText("오늘 계획들");
-         plan.setEditable(false);
-         plan.setFont(new Font("굴림체", Font.BOLD, 30));
+         plan=new JPanel();
+         plan.setBackground(Color.WHITE);
+         plan.setLayout(new BoxLayout(plan,BoxLayout.Y_AXIS));
          
          JScrollPane j = new JScrollPane(plan,
                  JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                  JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+         j.setPreferredSize(new Dimension(1300,100));
 
-         today_plan.add(j);     
+         today_plan.add(j); 
          
-         JButton complete=new JButton("완료");
+         
+         complete=new JButton("완료");
          complete.addActionListener(this);
+         complete.setVisible(false);
          complete.setFont(new Font("굴림체", Font.BOLD, 30));
          today_plan.add(complete);
          
-         int day = 7*now_Week+Today-7;
+         
          
     	 complete.addActionListener(new ActionListener(){
     		 	public void actionPerformed(ActionEvent arg0){
+    		 		int nn=0;
+    		 		for(int k=0;k<chk_cnt[now_Week-1][Today];k++) {
+    					 if(!chk[k].isSelected())
+    						 nn++;
+    				 }
+    		 		int day = 7*now_Week+Today-7;
     		 		if(b_2[day].getText() == "O")
     		 		{}
-    		 		else {
+    		 		else if(nn==0){
     		 		b_2[day].setText("O");
-    		 		b_2[day].setBackground(Color.GREEN);
+    		 		b_2[day].setBackground(Color.green);
     		 		percent[day/7] += 100/7.0;
     		 		b_3[day/7].setText(Integer.toString((int)percent[day/7])+"% 완료");
     		 		}
+    		 		add=0;
+    		 		for(int i=0;i<w;i++) {
+    		 			add+=Integer.parseInt(((String)b_3[i].getText()).replaceAll("[^0-9]", ""));
+    		 		}
+    		 		Today++;
+	        		if(Today==7) {
+	        			Today=0;
+	        			int progress_percent=Integer.parseInt(((String)b_3[now_Week-1].getText()).replaceAll("[^0-9]", ""));
+	    		 		
+	        			now_Week++;
+	        			
+	        			if(progress_percent>0 && progress_percent<20)
+	        	        	 comment.setText("저번주는 실천을 거의 안했어!! 혼 좀 나야해!");
+	        	         else if(progress_percent>=20 && progress_percent<40)
+	        	        	 comment.setText("저번주는 실천이 좀 부족해!! 힘내자!!");
+	        	         else if(progress_percent>=40 && progress_percent<60)
+	        	        	 comment.setText("이번주는 더 잘할 수 있어!!");
+	        	         else if(progress_percent>=60 && progress_percent<80)
+	        	        	 comment.setText("충분히 잘하고있어!!");
+	        	         else if(progress_percent>=80)
+	        	        	 comment.setText("완벽하게 해내고 있어!! 이번주도 파이팅!");
+	        			if(now_Week==11) {
+	        				//끝나는 클래스 실행
+	        			}
+	        		}
+	        		date.setText("TODAY "+now_Week+" WEEK "+Day[Today]);
+	        		progress.setText("현재 "+now_Week+"주차 "+Day[Today]+"입니다.   목표까지 "+add/10+"% 완료했습니다");
+	        		
     		 	}
     	 });
     	 
@@ -183,128 +238,167 @@ public class Scheduler extends JFrame implements ActionListener {
          tp.setFont(new Font("굴림체", Font.BOLD, 20));
          
          
+         //setting
+         
          JPanel set_panel=new JPanel();
          set_panel.setLayout(null);
+         
          
          JPanel set_panel1=new JPanel();
          set_panel1.setLayout(new FlowLayout());
          JLabel everyday=new JLabel("planner scheduler  ");
-         everyday.setFont(new Font("굴림체", Font.BOLD, 30));
+         everyday.setFont(new Font("굴림체", Font.BOLD, 40));
          set_panel1.add(everyday);
-         
-         JComboBox comboBox=new JComboBox();
-         String[] week_n=new String[w+1];
-         for(int i=0;i<w;i++)
-        	 week_n[i]=(i+1)+" WEEK";
-         week_n[w]="every day";
-         comboBox.setModel(new DefaultComboBoxModel(week_n));
-         comboBox.setPreferredSize(new Dimension(180,50));
-         comboBox.setFont(new Font("굴림체", Font.BOLD, 30));
-         comboBox.setBackground(Color.WHITE);
-         set_panel1.add(comboBox);
-         
-         
-         JComboBox comboBox2=new JComboBox();
-         comboBox2.setModel(new DefaultComboBoxModel(Day));
-         comboBox2.setPreferredSize(new Dimension(200,50));
-         comboBox2.setFont(new Font("굴림체", Font.BOLD, 30));
-         comboBox2.setBackground(Color.WHITE);
-         set_panel1.add(comboBox2);
-         
-         
-         set_panel1.setBounds(200, 50,1000, 60);
+         set_panel1.setBounds(200, 0,1000, 60);
+         JButton finish=new JButton("Start");
+         finish.addActionListener(this);
+         finish.setFont(new Font("굴림체", Font.BOLD, 30));
+         set_panel1.add(finish);
          set_panel.add(set_panel1);
          
-         JPanel set_panel2=new JPanel();
-         set_panel2.setLayout(new FlowLayout());
-         JComboBox everyday_set=new JComboBox();
-         
-         String[] t=new String[25];
-         for(int i=0;i<25;i++)
-        	 t[i]=i+" 시";
-         everyday_set.setModel(new DefaultComboBoxModel(t));
-         everyday_set.setPreferredSize(new Dimension(80,50));
-         everyday_set.setFont(new Font("굴림체", Font.BOLD, 20));
-         everyday_set.setBackground(Color.WHITE);
-         set_panel2.add(everyday_set);
-         
-         String[] m=new String[25];
-         for(int i=0;i<6;i++)
-        	 m[i]=(i*10)+"분";
-         JComboBox everyday_m=new JComboBox();
-         everyday_m.setModel(new DefaultComboBoxModel(m));
-         everyday_m.setPreferredSize(new Dimension(80,50));
-         everyday_m.setFont(new Font("굴림체", Font.BOLD, 20));
-         everyday_m.setBackground(Color.WHITE);
-         set_panel2.add(everyday_m);
-         
-         JLabel label_set=new JLabel("시작 ="
-         		+ "");
-         label_set.setFont(new Font("굴림체", Font.BOLD, 30));
-         set_panel2.add(label_set);
-         
-         JTextField T=new JTextField(2);
-         T.setBackground(Color.WHITE);
-         T.setFont(new Font("굴림체", Font.BOLD, 30));
-         set_panel2.add(T);
-         JLabel label_set1=new JLabel("시");
-         label_set1.setFont(new Font("굴림체", Font.BOLD, 30));
-         set_panel2.add(label_set1);
-         
-         JTextField M=new JTextField(2);
-         M.setBackground(Color.WHITE);
-         M.setFont(new Font("굴림체", Font.BOLD, 30));
-         set_panel2.add(M);
-         JLabel label_set2=new JLabel("분  동안 ");
-         label_set2.setFont(new Font("굴림체", Font.BOLD, 30));
-         set_panel2.add(label_set2);
-         
-         set_panel2.setBounds(200, 110,1000, 60);
-         set_panel.add(set_panel2);
-         
          JPanel set_panel3=new JPanel();
-         
-         JTextArea set_plan=new JTextArea(3,60);
          set_plan.setFont(new Font("굴림체", Font.BOLD, 30));
          set_panel3.add(set_plan);
-         set_panel3.setBounds(100, 170,1200, 170);
+         
+         set_p.setFont(new Font("굴림체", Font.BOLD, 30));
+         set_p.setEditable(false);
+         JScrollPane j_set = new JScrollPane(set_p,
+                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+         j_set.setPreferredSize(new Dimension(1020,200));
+
+         set_panel3.add(j_set); 
+         JButton all=new JButton("Every day");
+         all.setFont(new Font("굴림체", Font.BOLD, 30));
+         all.addActionListener(this);
+         set_panel3.add(all);
+         set_panel3.setBounds(100, 60,1200, 300);
          set_panel.add(set_panel3);
          
-         JButton store=new JButton("저장");
-         store.setBounds(1100, 340,100, 50);
-         store.addActionListener(this);
-         store.setFont(new Font("굴림체", Font.BOLD, 30));
-         set_panel.add(store);
+        
+        JPanel set_panel4=new JPanel();
+         set_panel4.setLayout(new FlowLayout());
+         JPanel west1=new JPanel();
+         west1.setLayout(new GridLayout(w,1));
+         JButton[] s_1=new JButton[w];
+         for(int i=0;i<w;i++) {
+        	 s_1[i]=new JButton((i+1)+" WEEK");
+        	 s_1[i].setFont(new Font("굴림체", Font.BOLD, 30));
+        	 s_1[i].setPreferredSize(new Dimension(180,100));
+        	 s_1[i].addActionListener(this);
+        	 west1.add(s_1[i]);
+         }
+         set_panel4.add(west1);
          
-         drawJPanel set_panel4=new drawJPanel();
-         set_panel4.setBounds(200, 370,1000, 1000);
-         set_panel.add(set_panel4);
+         int cnt=0;
+         int cnt_w=1;
+         JPanel center1=new JPanel();
+         center1.setLayout(new GridLayout(w,7));
+         s_2=new JButton[w*7];
+         for(int i=0;i<w*7;i++) {
+        	 s_2[i]=new JButton(cnt_w+"."+Day[cnt]);
+        	 s_2[i].setFont(new Font("굴림체", Font.BOLD, 20));
+        	 s_2[i].setPreferredSize(new Dimension(150,100));
+        	 s_2[i].addActionListener(this);
+        	 center1.add(s_2[i]);
+        	 cnt++;
+        	 if(cnt==7) {
+        		 cnt=0;
+        		 cnt_w++;
+        		 }
+         }
+         set_panel4.add(center1);
+         
+         JScrollPane js_s = new JScrollPane(set_panel4,
+                                         JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                         JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    
+         js_s.setBounds(50, 400,1300, 900);
+         set_panel.add(js_s);
+         
        
-         
-         
+      
          tp.add("setting",set_panel);
          tp.setFont(new Font("굴림체", Font.BOLD, 20));
-         
-         
          add(tp);
+        
 	}
+	
 	
 	
 	 public void actionPerformed(ActionEvent e){
 		 String what=e.getActionCommand();
 		 if(what.matches(".*완료.*")) {
-			 
+			 int to=Today;
+			 int we=now_Week;
+			 to--;
+			 if(to==-1) {
+				 to=6;
+				 we--;
+			 }
+			 for(int k=0;k<chk_cnt[we][to];k++) {
+				 chk[k].setVisible(false);
+			 }
+			 chk=new JCheckBox[chk_cnt[now_Week-1][Today]];
+			 StringTokenizer tokens = new StringTokenizer(str_set[now_Week-1][Today]);
+			 String one= tokens.nextToken("\n");
+			 for(int k=0;k<chk_cnt[now_Week-1][Today];k++) {
+				 String two=tokens.nextToken("\n");
+				 chk[k]= new JCheckBox(two, false);
+				 chk[k].setFont(new Font("굴림체", Font.BOLD, 30));
+				 plan.add(chk[k]);
+			 }
 		 }
-		 else if(what.matches(".*저장.*")) {
-			 
+		 else if(what.matches(".*WEEK.*")) {
+			 int num=Integer.parseInt(what.replaceAll("[^0-9]", ""))-1;
+				 String str_txt=set_plan.getText();
+					 for(int i=0;i<7;i++) {
+						 if(str_txt.length()>=2) {
+							 str_set[num][i]=str_set[num][i]+str_txt+"\n";
+							 chk_cnt[num][i]++;
+						 }
+					 }
 		 }
+		 else if(what.matches(".*Start.*")) {
+			 complete.setVisible(true);
+			 chk=new JCheckBox[chk_cnt[0][0]];
+			 StringTokenizer tokens = new StringTokenizer(str_set[0][0]);
+			 String one= tokens.nextToken("\n");
+			 for(int k=0;k<chk_cnt[0][0];k++) {
+				 String two=tokens.nextToken("\n");
+				 chk[k]= new JCheckBox(two, false);
+				 chk[k].setFont(new Font("굴림체", Font.BOLD, 30));
+				 plan.add(chk[k]);
+			 }
+			    
+		 }
+		 else if(what.matches(".*Every.*")) {
+			 String str_txt=set_plan.getText();
+			 for(int num=0;num<W;num++) {
+				 for(int i=0;i<7;i++) {
+					 if(str_txt.length()>=2) {
+						 str_set[num][i]=str_set[num][i]+str_txt+"\n";
+						 chk_cnt[num][i]++;
+					 }
+				 }
+			 }
+		 }
+		 else{
+				 int num=Integer.parseInt(what.replaceAll("[^0-9]", ""))-1;
+				 String str_txt=set_plan.getText();
+				 int c=(what.replaceAll("[^0-9]", "")).length();
+					 for(int i=0;i<7;i++) {
+						 if((what.substring(c+1)).equals(Day[i])) {
+							 if(str_txt.length()>=2) {
+								 str_set[num][i]= str_set[num][i]+str_txt+"\n";
+								 chk_cnt[num][i]++;
+							 }
+							 set_p.setText(str_set[num][i]);
+						 }
+					 }
+				 
+				 }
+		 set_plan.setText("");
+		 
 	 }
-}
-
-class drawJPanel extends JPanel{
-	public void paint(Graphics g) {
-		super.paint(g);
-		g.setColor(Color.black);
-		g.drawOval(0,0,1000,1000);
-	}
 }
