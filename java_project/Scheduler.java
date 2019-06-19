@@ -50,6 +50,7 @@ public class Scheduler extends JFrame implements ActionListener {
     JTextField set_plan=new JTextField(60);
     JTextArea set_p=new JTextArea(60,60);
     Date today = new Date();
+    JButton finish;
     JLabel date=new JLabel();
     JLabel progress=new JLabel();
     JButton complete;
@@ -79,7 +80,7 @@ public class Scheduler extends JFrame implements ActionListener {
          setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
          
          JPanel panel=new JPanel();
-         panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
+         panel.setLayout(null);
          
          JPanel panel_1=new JPanel();
          panel_1.setBackground(Color.WHITE);
@@ -87,6 +88,7 @@ public class Scheduler extends JFrame implements ActionListener {
          JLabel nickname=new JLabel(name+"의 "+w+" 주 계획표");
          nickname.setFont(new Font("굴림체", Font.BOLD, 70));        
          panel_1.add(nickname);
+         panel_1.setBounds(40, 0,1300, 100);
          panel.add(panel_1);
          
          JPanel panel_2=new JPanel();
@@ -98,6 +100,7 @@ public class Scheduler extends JFrame implements ActionListener {
          progress.setText(now_Week+"주차 "+Day[Today]+" 입니다. 현재까지 0% 완료했습니다");
          progress.setFont(new Font("굴림체", Font.BOLD, 40));
          panel_2.add(progress);
+         panel_2.setBounds(40, 110,1300, 110);
          panel.add(panel_2);
          
          JPanel panel_3=new JPanel();
@@ -142,8 +145,7 @@ public class Scheduler extends JFrame implements ActionListener {
          JScrollPane js = new JScrollPane(panel_3,
                                          JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                                          JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-         js.setPreferredSize(new Dimension(1400,550));
-       
+         js.setBounds(40, 230,1300, 550);
          panel.add(js);
          
          JPanel panel_4=new JPanel();
@@ -158,6 +160,7 @@ public class Scheduler extends JFrame implements ActionListener {
          date.setText("TODAY "+now_Week+" WEEK "+Day[Today]);
          date.setFont(new Font("굴림체", Font.BOLD, 20));
          panel_4.add(date);
+         panel_4.setBounds(40, 800,1300, 100);
          panel.add(panel_4);
          
          JPanel today_plan=new JPanel();
@@ -172,7 +175,7 @@ public class Scheduler extends JFrame implements ActionListener {
          JScrollPane j = new JScrollPane(plan,
                  JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                  JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-         j.setPreferredSize(new Dimension(1300,100));
+         j.setPreferredSize(new Dimension(1300,350));
 
          today_plan.add(j); 
          
@@ -182,7 +185,7 @@ public class Scheduler extends JFrame implements ActionListener {
          complete.setVisible(false);
          complete.setFont(new Font("굴림체", Font.BOLD, 30));
          today_plan.add(complete);
-         
+         today_plan.setBounds(40, 920,1300, 500);
          
          
     	 complete.addActionListener(new ActionListener(){
@@ -202,7 +205,7 @@ public class Scheduler extends JFrame implements ActionListener {
     		 		b_3[day/7].setText(Integer.toString((int)percent[day/7])+"% 완료");
     		 		}
     		 		add=0;
-    		 		for(int i=0;i<w;i++) {
+    		 		for(int i=0;i<W;i++) {
     		 			add+=Integer.parseInt(((String)b_3[i].getText()).replaceAll("[^0-9]", ""));
     		 		}
     		 		Today++;
@@ -222,12 +225,13 @@ public class Scheduler extends JFrame implements ActionListener {
 	        	        	 comment.setText("충분히 잘하고있어!!");
 	        	         else if(progress_percent>=80)
 	        	        	 comment.setText("완벽하게 해내고 있어!! 이번주도 파이팅!");
-	        			if(now_Week==11) {
-	        				//끝나는 클래스 실행
+	        			if(now_Week==W+1) {
+	        				comment.setText("오늘이 목표 한 날이야!");
+	        				complete.setVisible(false);
 	        			}
 	        		}
 	        		date.setText("TODAY "+now_Week+" WEEK "+Day[Today]);
-	        		progress.setText("현재 "+now_Week+"주차 "+Day[Today]+"입니다.   목표까지 "+add/10+"% 완료했습니다");
+	        		progress.setText("현재 "+now_Week+"주차 "+Day[Today]+"입니다.   목표까지 "+add/W+"% 완료했습니다");
 	        		
     		 	}
     	 });
@@ -250,7 +254,7 @@ public class Scheduler extends JFrame implements ActionListener {
          everyday.setFont(new Font("굴림체", Font.BOLD, 40));
          set_panel1.add(everyday);
          set_panel1.setBounds(200, 0,1000, 60);
-         JButton finish=new JButton("Start");
+         finish=new JButton("Start");
          finish.addActionListener(this);
          finish.setFont(new Font("굴림체", Font.BOLD, 30));
          set_panel1.add(finish);
@@ -329,6 +333,36 @@ public class Scheduler extends JFrame implements ActionListener {
 	 public void actionPerformed(ActionEvent e){
 		 String what=e.getActionCommand();
 		 if(what.matches(".*완료.*")) {
+			 if(W+1==now_Week) {
+				 int to=Today;
+				 int we=now_Week;
+				 to--;
+				 if(to==-1) {
+					 to=6;
+					 we--;
+				 }
+				 for(int k=0;k<chk_cnt[we-1][to];k++) {
+					 chk[k].setVisible(false);
+				 }
+				 JCheckBox end;
+				 if(add/W<=50) {
+					 end=new JCheckBox("목표달성하기엔 부족해 !!");
+					 end.setFont(new Font("굴림체", Font.BOLD, 50));
+					 plan.add(end);
+				 }else if(add/W>=90){
+					 end=new JCheckBox("목표달성 치킨먹자!!");
+					 end.setFont(new Font("굴림체", Font.BOLD, 50));
+					 plan.add(end);
+				 }
+				 else {
+					 end=new JCheckBox("운이 좋으면 목표달성?!!");
+					 end.setFont(new Font("굴림체", Font.BOLD, 50));
+					 plan.add(end);
+				 }
+				
+				
+			 }
+			 else {
 			 int to=Today;
 			 int we=now_Week;
 			 to--;
@@ -336,7 +370,7 @@ public class Scheduler extends JFrame implements ActionListener {
 				 to=6;
 				 we--;
 			 }
-			 for(int k=0;k<chk_cnt[we][to];k++) {
+			 for(int k=0;k<chk_cnt[we-1][to];k++) {
 				 chk[k].setVisible(false);
 			 }
 			 chk=new JCheckBox[chk_cnt[now_Week-1][Today]];
@@ -345,9 +379,11 @@ public class Scheduler extends JFrame implements ActionListener {
 			 for(int k=0;k<chk_cnt[now_Week-1][Today];k++) {
 				 String two=tokens.nextToken("\n");
 				 chk[k]= new JCheckBox(two, false);
-				 chk[k].setFont(new Font("굴림체", Font.BOLD, 30));
+				 chk[k].setFont(new Font("굴림체", Font.BOLD, 40));
 				 plan.add(chk[k]);
 			 }
+			 }
+			 
 		 }
 		 else if(what.matches(".*WEEK.*")) {
 			 int num=Integer.parseInt(what.replaceAll("[^0-9]", ""))-1;
@@ -360,6 +396,7 @@ public class Scheduler extends JFrame implements ActionListener {
 					 }
 		 }
 		 else if(what.matches(".*Start.*")) {
+			 finish.setVisible(false);
 			 complete.setVisible(true);
 			 chk=new JCheckBox[chk_cnt[0][0]];
 			 StringTokenizer tokens = new StringTokenizer(str_set[0][0]);
@@ -367,7 +404,7 @@ public class Scheduler extends JFrame implements ActionListener {
 			 for(int k=0;k<chk_cnt[0][0];k++) {
 				 String two=tokens.nextToken("\n");
 				 chk[k]= new JCheckBox(two, false);
-				 chk[k].setFont(new Font("굴림체", Font.BOLD, 30));
+				 chk[k].setFont(new Font("굴림체", Font.BOLD, 40));
 				 plan.add(chk[k]);
 			 }
 			    
