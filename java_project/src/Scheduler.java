@@ -263,7 +263,7 @@ public class Scheduler extends JFrame implements ActionListener {
 	        			now_Week++;
 	        			
 	        			if(progress_percent>0 && progress_percent<20)
-	        	        	 comment.setText("저번주는 실천을 거의 안했어!! 혼 좀 나야해!");
+	        	        	 comment.setText("저번주는 실천을 거의 안했어!! 정신 차려!");
 	        	         else if(progress_percent>=20 && progress_percent<40)
 	        	        	 comment.setText("저번주는 실천이 좀 부족해!! 힘내자!!");
 	        	         else if(progress_percent>=40 && progress_percent<60)
@@ -605,8 +605,10 @@ public class Scheduler extends JFrame implements ActionListener {
 				 sampleColor5 =JColorChooser.showDialog(this, "JColorChooser",sampleColor5);
 				 if(sampleColor5 !=null) {
 					 plan.setBackground(sampleColor5);
+					 set_panel4.setBackground(sampleColor5);
 					 set_plan.setBackground(sampleColor5);
 					 set_p.setBackground(sampleColor5);
+					 panel_3.setBackground(sampleColor5);
 				 }
 			 }
 			 
