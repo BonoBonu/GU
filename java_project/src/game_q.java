@@ -151,7 +151,8 @@ public class game_q extends JFrame
 				  int n=Integer.parseInt(actionCommand);
 				  String wall=actionButton[(p1+n)/2].getText();
 				  if(!wall.equals("close")) {
-					  if(actionCommand.equals(Integer.toString(p1-2))||actionCommand.equals(Integer.toString(p1+2))||actionCommand.equals(Integer.toString(p1+34))||actionCommand.equals(Integer.toString(p1-34))) {
+					  if(actionCommand.equals(Integer.toString(p1-2))||actionCommand.equals(Integer.toString(p1+2))
+							  ||actionCommand.equals(Integer.toString(p1+34))||actionCommand.equals(Integer.toString(p1-34))) {
 						  
 						  actionButton[p1].setBackground(Color.black); 
 						  actionButton[p1].setText(Integer.toString(p1));
