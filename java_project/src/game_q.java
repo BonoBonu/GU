@@ -16,11 +16,11 @@ public class game_q extends JFrame
                             implements ActionListener
 {
     SubFrame sub = new SubFrame();
-	public static final int WIDTH =2000;
+	public static final int WIDTH =1800;
     public static final int HEIGHT =1450;
     
     JButton[] actionButton=new JButton[289];
-    JButton information = new JButton();
+    JLabel information = new JLabel();
     
     
     int wall1=0;
@@ -33,13 +33,14 @@ public class game_q extends JFrame
     	 setTitle("Quoridor game");
          setSize(WIDTH, HEIGHT);	
          setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-     
+      
          setLayout(null);
-         //information.setText("<html>>>p1턴  <br><br>벽"+(10-wall1)+"개</html>");
-         information.setText("p1턴            벽"+(10-wall1)+"개");
+         information.setText("<html>>>p1턴  <br><br>벽"+(10-wall1)+"개</html>");
          information.setFont(new Font("굴림체", Font.BOLD, 80));
+         information.setForeground(Color.BLACK);
 
          information.setBounds(1500,50,450,800);
+         add(information);
        
          JPanel position = new JPanel();
          
