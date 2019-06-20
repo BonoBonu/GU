@@ -38,6 +38,7 @@ import javax.swing.event.ChangeListener;
 
 
 public class Scheduler extends JFrame implements ActionListener {
+	public int division_size=1;
 	public static int now_Week=1;
 	public static int Today=0;
 	public static int add=0;
@@ -51,8 +52,8 @@ public class Scheduler extends JFrame implements ActionListener {
 	Color gauge=Color.green;
 	String[] Day = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
 	String[] Day2 = {"MON","TUE","WED","THU","FRI", "SAT", "SUN"};
-	public static final int WIDTH =700;
-    public static final int HEIGHT =750;
+	public int WIDTH =1450;
+    public int HEIGHT =1650;
     String[][] str_set;
     int[][] chk_cnt;
     StringTokenizer st;
@@ -122,7 +123,7 @@ public class Scheduler extends JFrame implements ActionListener {
          
 		 Week set=new Week();
 		 setTitle(g);
-         setSize(WIDTH, HEIGHT);	
+         setSize(WIDTH/division_size, HEIGHT/division_size);	
          setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
          
          panel=new JPanel();
@@ -132,33 +133,33 @@ public class Scheduler extends JFrame implements ActionListener {
          panel_1.setBackground(Color.WHITE);
          panel_1.setLayout(new FlowLayout());
          nickname=new JLabel(name+"의 "+w+" 주 계획표");
-         nickname.setFont(new Font("굴림체", Font.BOLD, 35));        
+         nickname.setFont(new Font("굴림체", Font.BOLD, 70/division_size));        
          panel_1.add(nickname);
-         panel_1.setBounds(20, 0,650, 50);
+         panel_1.setBounds(40/division_size, 0/division_size,1300/division_size, 100/division_size);
          panel.add(panel_1);
          
          panel_2=new JPanel();
          panel_2.setBackground(Color.WHITE);
          panel_2.setLayout(new GridLayout(2,1));
          Progress=new JLabel("목표: "+g+"!!");
-         Progress.setFont(new Font("굴림체", Font.BOLD, 25));
+         Progress.setFont(new Font("굴림체", Font.BOLD, 50/division_size));
          panel_2.add(Progress);
          progress.setText(now_Week+"주차 "+Day[Today]+" 입니다. 현재까지 0% 완료했습니다");
-         progress.setFont(new Font("굴림체", Font.BOLD, 20));
+         progress.setFont(new Font("굴림체", Font.BOLD, 40/division_size));
          panel_2.add(progress);
-         panel_2.setBounds(20, 55,650, 55);
+         panel_2.setBounds(40/division_size, 110/division_size,1300/division_size, 110/division_size);
          panel.add(panel_2);
          
          panel_3=new JPanel();
          panel_3.setLayout(new FlowLayout());
-         panel_3.setBackground(Color.WHITE); 
+         panel_3.setBackground(Color.WHITE);
          west=new JPanel();
          west.setLayout(new GridLayout(w,1));
          b_1=new JButton[w];
          for(int i=0;i<w;i++) {
         	 b_1[i]=new JButton((i+1)+" WEEK");
-        	 b_1[i].setFont(new Font("굴림체", Font.BOLD, 15));
-        	 b_1[i].setPreferredSize(new Dimension(90,50));
+        	 b_1[i].setFont(new Font("굴림체", Font.BOLD, 30/division_size));
+        	 b_1[i].setPreferredSize(new Dimension(180/division_size,100/division_size));
         	 b_1[i].setForeground(Color.BLACK);
         	 west.add(b_1[i]);
          }
@@ -169,8 +170,8 @@ public class Scheduler extends JFrame implements ActionListener {
          b_2=new JButton[w*7];
          for(int i=0;i<w*7;i++) {
         	 b_2[i]=new JButton("X");
-        	 b_2[i].setFont(new Font("굴림체", Font.BOLD, 25));
-        	 b_2[i].setPreferredSize(new Dimension(50,50));
+        	 b_2[i].setFont(new Font("굴림체", Font.BOLD, 50/division_size));
+        	 b_2[i].setPreferredSize(new Dimension(100/division_size,100/division_size));
         	 b_2[i].setForeground(Color.BLACK);
         	 center.add(b_2[i]);
          }
@@ -181,8 +182,8 @@ public class Scheduler extends JFrame implements ActionListener {
          b_3=new JButton[w];
          for(int i=0;i<w;i++) {
         	 b_3[i]=new JButton(0+"% 완료");
-        	 b_3[i].setFont(new Font("굴림체", Font.BOLD, 10));
-        	 b_3[i].setPreferredSize(new Dimension(90,50));
+        	 b_3[i].setFont(new Font("굴림체", Font.BOLD, 20/division_size));
+        	 b_3[i].setPreferredSize(new Dimension(150/division_size,100/division_size));
         	 b_3[i].setForeground(Color.BLACK);
         	 east.add(b_3[i]);
          }
@@ -191,28 +192,28 @@ public class Scheduler extends JFrame implements ActionListener {
          JScrollPane js = new JScrollPane(panel_3,
                                          JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                                          JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-         js.setBounds(20, 115,650, 275);
+         js.setBounds(40/division_size, 230/division_size,1300/division_size, 550/division_size);
          panel.add(js);
          
          panel_4=new JPanel();
          panel_4.setBackground(Color.WHITE);
          panel_4.setLayout(new GridLayout(2,1));
-         comment=new JTextArea(1,15);
+         comment=new JTextArea(1,15/division_size);
          comment.setText("시작이 반 이래~ 파이팅!! ");
          comment.setEditable(false);
-         comment.setFont(new Font("굴림체", Font.BOLD, 20));
+         comment.setFont(new Font("굴림체", Font.BOLD, 40/division_size));
          panel_4.add(comment);
-         /*
+         
          date.setText("TODAY "+now_Week+" WEEK "+Day[Today]);
-         date.setFont(new Font("굴림체", Font.BOLD, 10));
+         date.setFont(new Font("굴림체", Font.BOLD, 20/division_size));
          panel_4.add(date);
-         panel_4.setBounds(20, 400,650, 50);*/
+         panel_4.setBounds(40/division_size, 800/division_size,1300/division_size, 100/division_size);
          panel.add(panel_4);
          
          today_plan=new JPanel();
          today_plan.setBackground(Color.WHITE);
          now =new JLabel("오늘 할 일");
-         now.setFont(new Font("굴림체", Font.BOLD, 15));
+         now.setFont(new Font("굴림체", Font.BOLD, 30/division_size));
          today_plan.add(now);
          
          plan=new JPanel();
@@ -222,7 +223,7 @@ public class Scheduler extends JFrame implements ActionListener {
          JScrollPane j = new JScrollPane(plan,
                  JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                  JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-         j.setPreferredSize(new Dimension(650,100));
+         j.setPreferredSize(new Dimension(1300/division_size,350/division_size));
 
          today_plan.add(j); 
          
@@ -230,9 +231,9 @@ public class Scheduler extends JFrame implements ActionListener {
          complete=new JButton("완료");
          complete.addActionListener(this);
          complete.setVisible(false);
-         complete.setFont(new Font("굴림체", Font.BOLD, 15));
+         complete.setFont(new Font("굴림체", Font.BOLD, 30/division_size));
          today_plan.add(complete);
-         today_plan.setBounds(20, 460,650, 250);
+         today_plan.setBounds(40/division_size, 920/division_size,1300/division_size, 500/division_size);
          
          
     	 complete.addActionListener(new ActionListener(){
@@ -286,7 +287,7 @@ public class Scheduler extends JFrame implements ActionListener {
          panel.add(today_plan);
          
          tp.add("Main",panel);
-         tp.setFont(new Font("굴림체", Font.BOLD, 15));
+         tp.setFont(new Font("굴림체", Font.BOLD, 30/division_size));
          
          
          //Plan_set
@@ -298,33 +299,36 @@ public class Scheduler extends JFrame implements ActionListener {
          set_panel1=new JPanel();
          set_panel1.setLayout(new FlowLayout());
          everyday=new JLabel("planner scheduler  ");
-         everyday.setFont(new Font("굴림체", Font.BOLD, 20));
+         everyday.setFont(new Font("굴림체", Font.BOLD, 40/division_size));
          set_panel1.add(everyday);
-         set_panel1.setBounds(50, 10,600, 30);
+         set_panel1.setBounds(100/division_size, 20/division_size,1200/division_size, 60/division_size);
          
          finish=new JButton("Start");
          finish.addActionListener(this);
-         finish.setFont(new Font("굴림체", Font.BOLD, 15));
+         finish.setFont(new Font("굴림체", Font.BOLD, 30/division_size));
+         finish.setPreferredSize(new Dimension(200/division_size,50/division_size));
          set_panel1.add(finish);
          set_panel.add(set_panel1);
          
          set_panel3=new JPanel();
-         set_plan.setFont(new Font("굴림체", Font.BOLD, 15));
+         set_panel3.setLayout(new BoxLayout(set_panel3,BoxLayout.Y_AXIS));
+         set_plan.setFont(new Font("굴림체", Font.BOLD, 30/division_size));
          set_panel3.add(set_plan);
          
-         set_p.setFont(new Font("굴림체", Font.BOLD, 15));
+         set_p.setFont(new Font("굴림체", Font.BOLD, 30/division_size));
          set_p.setEditable(false);
          JScrollPane j_set = new JScrollPane(set_p,
                  JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                  JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-         j_set.setPreferredSize(new Dimension(510,100));
+         j_set.setPreferredSize(new Dimension(1020/division_size,200/division_size));
 
          set_panel3.add(j_set); 
          all=new JButton("Every day");
-         all.setFont(new Font("굴림체", Font.BOLD, 15));
+         all.setFont(new Font("굴림체", Font.BOLD, 30/division_size));
+         all.setPreferredSize(new Dimension(100/division_size,50/division_size));
          all.addActionListener(this);
          set_panel3.add(all);
-         set_panel3.setBounds(50, 40,600, 180);
+         set_panel3.setBounds(100/division_size, 80/division_size,1200/division_size, 300/division_size);
          set_panel.add(set_panel3);
          
         
@@ -335,8 +339,8 @@ public class Scheduler extends JFrame implements ActionListener {
          s_1=new JButton[w];
          for(int i=0;i<w;i++) {
         	 s_1[i]=new JButton((i+1)+" WEEK");
-        	 s_1[i].setFont(new Font("굴림체", Font.BOLD, 15));
-        	 s_1[i].setPreferredSize(new Dimension(90,50));
+        	 s_1[i].setFont(new Font("굴림체", Font.BOLD, 30/division_size));
+        	 s_1[i].setPreferredSize(new Dimension(180/division_size,100/division_size));
         	 s_1[i].addActionListener(this);
         	 west1.add(s_1[i]);
          }
@@ -349,8 +353,8 @@ public class Scheduler extends JFrame implements ActionListener {
          s_2=new JButton[w*7];
          for(int i=0;i<w*7;i++) {
         	 s_2[i]=new JButton(cnt_w+"."+Day2[cnt]);
-        	 s_2[i].setFont(new Font("굴림체", Font.BOLD, 12));
-        	 s_2[i].setPreferredSize(new Dimension(75,50));
+        	 s_2[i].setFont(new Font("굴림체", Font.BOLD, 20/division_size));
+        	 s_2[i].setPreferredSize(new Dimension(150/division_size,100/division_size));
         	 s_2[i].addActionListener(this);
         	 center1.add(s_2[i]);
         	 cnt++;
@@ -360,17 +364,16 @@ public class Scheduler extends JFrame implements ActionListener {
         		 }
          }
          set_panel4.add(center1);
-
          
          JScrollPane js_s = new JScrollPane(set_panel4,
                                          JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                                          JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     
-         js_s.setBounds(25, 230,650, 450);
+         js_s.setBounds(50/division_size, 400/division_size,1300/division_size, 900/division_size);
          set_panel.add(js_s);
          
          tp.add("Plan_set",set_panel);
-         tp.setFont(new Font("굴림체", Font.BOLD, 15));
+         tp.setFont(new Font("굴림체", Font.BOLD, 30/division_size));
          
          //set_color
          
@@ -378,43 +381,43 @@ public class Scheduler extends JFrame implements ActionListener {
          set_color.setLayout(null);
          
          colorchange=new JButton("background color");
-         colorchange.setFont(new Font("굴림체", Font.BOLD, 15));
-         colorchange.setBounds(250,50,250,25);
+         colorchange.setFont(new Font("굴림체", Font.BOLD, 30/division_size));
+         colorchange.setBounds(500/division_size,100/division_size,500/division_size,50/division_size);
          colorchange.addActionListener(this);
          set_color.add(colorchange);
          
          colorchange1=new JButton("letter color");
-         colorchange1.setFont(new Font("굴림체", Font.BOLD, 15));
-         colorchange1.setBounds(250,100,250,25);
+         colorchange1.setFont(new Font("굴림체", Font.BOLD, 30/division_size));
+         colorchange1.setBounds(500/division_size,200/division_size,500/division_size,50/division_size);
          colorchange1.addActionListener(this);
          set_color.add(colorchange1);
          
          colorchange2=new JButton("button color");
-         colorchange2.setFont(new Font("굴림체", Font.BOLD, 15));
-         colorchange2.setBounds(250,150,250,25);
+         colorchange2.setFont(new Font("굴림체", Font.BOLD, 30/division_size));
+         colorchange2.setBounds(500/division_size,300/division_size,500/division_size,50/division_size);
          colorchange2.addActionListener(this);
          set_color.add(colorchange2);
          
          colorchange3=new JButton("gauge color");
-         colorchange3.setFont(new Font("굴림체", Font.BOLD, 15));
-         colorchange3.setBounds(250,200,250,25);
+         colorchange3.setFont(new Font("굴림체", Font.BOLD, 30/division_size));
+         colorchange3.setBounds(500/division_size,400/division_size,500/division_size,50/division_size);
          colorchange3.addActionListener(this);
          set_color.add(colorchange3);
          
          colorchange4=new JButton("panel color");
-         colorchange4.setFont(new Font("굴림체", Font.BOLD, 15));
-         colorchange4.setBounds(250,250,250,25);
+         colorchange4.setFont(new Font("굴림체", Font.BOLD, 30/division_size));
+         colorchange4.setBounds(500/division_size,500/division_size,500/division_size,50/division_size);
          colorchange4.addActionListener(this);
          set_color.add(colorchange4);
          
          colorchange5=new JButton("textBackground color");
-         colorchange5.setFont(new Font("굴림체", Font.BOLD, 15));
-         colorchange5.setBounds(200,300,350,25);
+         colorchange5.setFont(new Font("굴림체", Font.BOLD, 30/division_size));
+         colorchange5.setBounds(400/division_size,600/division_size,700/division_size,50/division_size);
          colorchange5.addActionListener(this);
          set_color.add(colorchange5);
          
          tp.add("Color_set",set_color);
-         tp.setFont(new Font("굴림체", Font.BOLD, 15));
+         tp.setFont(new Font("굴림체", Font.BOLD, 30/division_size));
          add(tp);
 
         
@@ -439,16 +442,16 @@ public class Scheduler extends JFrame implements ActionListener {
 				 JCheckBox end;
 				 if(add/W<=50) {
 					 end=new JCheckBox("목표달성하기엔 부족해 !!");
-					 end.setFont(new Font("굴림체", Font.BOLD, 25));
+					 end.setFont(new Font("굴림체", Font.BOLD, 50/division_size));
 					 plan.add(end);
 				 }else if(add/W>=90){
 					 end=new JCheckBox("목표달성 치킨먹자!!");
-					 end.setFont(new Font("굴림체", Font.BOLD, 25));
+					 end.setFont(new Font("굴림체", Font.BOLD, 50/division_size));
 					 plan.add(end);
 				 }
 				 else {
 					 end=new JCheckBox("운이 좋으면 목표달성?!!");
-					 end.setFont(new Font("굴림체", Font.BOLD, 25));
+					 end.setFont(new Font("굴림체", Font.BOLD, 50/division_size));
 					 plan.add(end);
 				 }
 				
@@ -471,7 +474,7 @@ public class Scheduler extends JFrame implements ActionListener {
 			 for(int k=0;k<chk_cnt[now_Week-1][Today];k++) {
 				 String two=tokens.nextToken("\n");
 				 chk[k]= new JCheckBox(two, false);
-				 chk[k].setFont(new Font("굴림체", Font.BOLD, 25));
+				 chk[k].setFont(new Font("굴림체", Font.BOLD, 40/division_size));
 				 plan.add(chk[k]);
 			 }
 			 }
@@ -496,7 +499,7 @@ public class Scheduler extends JFrame implements ActionListener {
 			 for(int k=0;k<chk_cnt[0][0];k++) {
 				 String two=tokens.nextToken("\n");
 				 chk[k]= new JCheckBox(two, false);
-				 chk[k].setFont(new Font("굴림체", Font.BOLD, 20));
+				 chk[k].setFont(new Font("굴림체", Font.BOLD, 40/division_size));
 				 plan.add(chk[k]);
 			 }
 			    
